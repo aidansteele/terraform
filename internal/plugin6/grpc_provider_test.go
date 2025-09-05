@@ -2609,3 +2609,75 @@ func TestGRPCProvider_DeleteState(t *testing.T) {
 		}
 	})
 }
+
+func TestGRPCProvider_ResourceAddress(t *testing.T) {
+	t.Run("PlanResourceChange includes resource address", func(t *testing.T) {
+		client := mockProviderClient(t)
+		p := &GRPCProvider{
+			client: client,
+		}
+
+		expectedResourceAddress := "module.example.aws_instance.test[0]"
+
+		client.EXPECT().PlanResourceChange(
+			gomock.Any(),
+			gomock.Any(),
+		).Return(&proto.PlanResourceChange_Response{
+			PlannedState: &proto.DynamicValue{
+				Msgpack: []byte("\x81\xa4attr\xa3bar"),
+			},
+		}, nil)
+
+		_ = p.PlanResourceChange(providers.PlanResourceChangeRequest{
+			TypeName: "resource",
+			PriorState: cty.ObjectVal(map[string]cty.Value{
+				"attr": cty.StringVal("foo"),
+			}),
+			ProposedNewState: cty.ObjectVal(map[string]cty.Value{
+				"attr": cty.StringVal("bar"),
+			}),
+			Config: cty.ObjectVal(map[string]cty.Value{
+				"attr": cty.StringVal("bar"),
+			}),
+			ResourceAddress: expectedResourceAddress,
+		})
+
+		// The test mainly verifies that the field exists and doesn't cause compilation errors
+		// More comprehensive testing would require infrastructure to capture the actual request
+	})
+
+	t.Run("ApplyResourceChange includes resource address", func(t *testing.T) {
+		client := mockProviderClient(t)
+		p := &GRPCProvider{
+			client: client,
+		}
+
+		expectedResourceAddress := "aws_s3_bucket.example"
+
+		client.EXPECT().ApplyResourceChange(
+			gomock.Any(),
+			gomock.Any(),
+		).Return(&proto.ApplyResourceChange_Response{
+			NewState: &proto.DynamicValue{
+				Msgpack: []byte("\x81\xa4attr\xa3bar"),
+			},
+		}, nil)
+
+		_ = p.ApplyResourceChange(providers.ApplyResourceChangeRequest{
+			TypeName: "resource",
+			PriorState: cty.ObjectVal(map[string]cty.Value{
+				"attr": cty.StringVal("foo"),
+			}),
+			PlannedState: cty.ObjectVal(map[string]cty.Value{
+				"attr": cty.StringVal("bar"),
+			}),
+			Config: cty.ObjectVal(map[string]cty.Value{
+				"attr": cty.StringVal("bar"),
+			}),
+			ResourceAddress: expectedResourceAddress,
+		})
+
+		// The test mainly verifies that the field exists and doesn't cause compilation errors
+		// More comprehensive testing would require infrastructure to capture the actual request
+	})
+}

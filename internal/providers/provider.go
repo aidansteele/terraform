@@ -543,6 +543,13 @@ type PlanResourceChangeRequest struct {
 
 	// PriorIdentity is the current identity data of the resource.
 	PriorIdentity cty.Value
+
+	// ResourceAddress is the absolute resource address of the resource instance
+	// being planned, including any module path and index/key if applicable.
+	// Examples: "aws_iam_role_policy_attachment.rds_enhanced_monitoring",
+	// "module.postgres.aws_db_instance.primary", "module.app.module.web.aws_instance.server[0]"
+	// This field is optional and may be empty if unavailable.
+	ResourceAddress string
 }
 
 type PlanResourceChangeResponse struct {
@@ -605,6 +612,13 @@ type ApplyResourceChangeRequest struct {
 
 	// PlannedIdentity is the planned identity data of the resource.
 	PlannedIdentity cty.Value
+
+	// ResourceAddress is the absolute resource address of the resource instance
+	// being applied, including any module path and index/key if applicable.
+	// Examples: "aws_iam_role_policy_attachment.rds_enhanced_monitoring",
+	// "module.postgres.aws_db_instance.primary", "module.app.module.web.aws_instance.server[0]"
+	// This field is optional and may be empty if unavailable.
+	ResourceAddress string
 }
 
 type ApplyResourceChangeResponse struct {

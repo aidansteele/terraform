@@ -4720,8 +4720,13 @@ type PlanResourceChange_Request struct {
 	ProviderMeta       *DynamicValue          `protobuf:"bytes,6,opt,name=provider_meta,json=providerMeta,proto3" json:"provider_meta,omitempty"`
 	ClientCapabilities *ClientCapabilities    `protobuf:"bytes,7,opt,name=client_capabilities,json=clientCapabilities,proto3" json:"client_capabilities,omitempty"`
 	PriorIdentity      *ResourceIdentityData  `protobuf:"bytes,8,opt,name=prior_identity,json=priorIdentity,proto3" json:"prior_identity,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	// resource_address is the absolute resource address of the resource instance
+	// being planned, including any module path and index/key if applicable.
+	// Examples: "aws_iam_role_policy_attachment.rds_enhanced_monitoring",
+	// "module.postgres.aws_db_instance.primary", "module.app.module.web.aws_instance.server[0]"
+	ResourceAddress string `protobuf:"bytes,9,opt,name=resource_address,json=resourceAddress,proto3" json:"resource_address,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *PlanResourceChange_Request) Reset() {
@@ -4808,6 +4813,13 @@ func (x *PlanResourceChange_Request) GetPriorIdentity() *ResourceIdentityData {
 		return x.PriorIdentity
 	}
 	return nil
+}
+
+func (x *PlanResourceChange_Request) GetResourceAddress() string {
+	if x != nil {
+		return x.ResourceAddress
+	}
+	return ""
 }
 
 type PlanResourceChange_Response struct {
@@ -4924,6 +4936,11 @@ type ApplyResourceChange_Request struct {
 	PlannedPrivate  []byte                 `protobuf:"bytes,5,opt,name=planned_private,json=plannedPrivate,proto3" json:"planned_private,omitempty"`
 	ProviderMeta    *DynamicValue          `protobuf:"bytes,6,opt,name=provider_meta,json=providerMeta,proto3" json:"provider_meta,omitempty"`
 	PlannedIdentity *ResourceIdentityData  `protobuf:"bytes,7,opt,name=planned_identity,json=plannedIdentity,proto3" json:"planned_identity,omitempty"`
+	// resource_address is the absolute resource address of the resource instance
+	// being applied, including any module path and index/key if applicable.
+	// Examples: "aws_iam_role_policy_attachment.rds_enhanced_monitoring",
+	// "module.postgres.aws_db_instance.primary", "module.app.module.web.aws_instance.server[0]"
+	ResourceAddress string `protobuf:"bytes,8,opt,name=resource_address,json=resourceAddress,proto3" json:"resource_address,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -5005,6 +5022,13 @@ func (x *ApplyResourceChange_Request) GetPlannedIdentity() *ResourceIdentityData
 		return x.PlannedIdentity
 	}
 	return nil
+}
+
+func (x *ApplyResourceChange_Request) GetResourceAddress() string {
+	if x != nil {
+		return x.ResourceAddress
+	}
+	return ""
 }
 
 type ApplyResourceChange_Response struct {
@@ -7810,8 +7834,8 @@ const file_tfplugin6_proto_rawDesc = "" +
 	"\vdiagnostics\x18\x02 \x03(\v2\x15.tfplugin6.DiagnosticR\vdiagnostics\x12\x18\n" +
 	"\aprivate\x18\x03 \x01(\fR\aprivate\x12/\n" +
 	"\bdeferred\x18\x04 \x01(\v2\x13.tfplugin6.DeferredR\bdeferred\x12B\n" +
-	"\fnew_identity\x18\x05 \x01(\v2\x1f.tfplugin6.ResourceIdentityDataR\vnewIdentity\"\x87\a\n" +
-	"\x12PlanResourceChange\x1a\xd3\x03\n" +
+	"\fnew_identity\x18\x05 \x01(\v2\x1f.tfplugin6.ResourceIdentityDataR\vnewIdentity\"\xb2\a\n" +
+	"\x12PlanResourceChange\x1a\xfe\x03\n" +
 	"\aRequest\x12\x1b\n" +
 	"\ttype_name\x18\x01 \x01(\tR\btypeName\x128\n" +
 	"\vprior_state\x18\x02 \x01(\v2\x17.tfplugin6.DynamicValueR\n" +
@@ -7821,7 +7845,8 @@ const file_tfplugin6_proto_rawDesc = "" +
 	"\rprior_private\x18\x05 \x01(\fR\fpriorPrivate\x12<\n" +
 	"\rprovider_meta\x18\x06 \x01(\v2\x17.tfplugin6.DynamicValueR\fproviderMeta\x12N\n" +
 	"\x13client_capabilities\x18\a \x01(\v2\x1d.tfplugin6.ClientCapabilitiesR\x12clientCapabilities\x12F\n" +
-	"\x0eprior_identity\x18\b \x01(\v2\x1f.tfplugin6.ResourceIdentityDataR\rpriorIdentity\x1a\x9a\x03\n" +
+	"\x0eprior_identity\x18\b \x01(\v2\x1f.tfplugin6.ResourceIdentityDataR\rpriorIdentity\x12)\n" +
+	"\x10resource_address\x18\t \x01(\tR\x0fresourceAddress\x1a\x9a\x03\n" +
 	"\bResponse\x12<\n" +
 	"\rplanned_state\x18\x01 \x01(\v2\x17.tfplugin6.DynamicValueR\fplannedState\x12C\n" +
 	"\x10requires_replace\x18\x02 \x03(\v2\x18.tfplugin6.AttributePathR\x0frequiresReplace\x12'\n" +
@@ -7829,8 +7854,8 @@ const file_tfplugin6_proto_rawDesc = "" +
 	"\vdiagnostics\x18\x04 \x03(\v2\x15.tfplugin6.DiagnosticR\vdiagnostics\x12,\n" +
 	"\x12legacy_type_system\x18\x05 \x01(\bR\x10legacyTypeSystem\x12/\n" +
 	"\bdeferred\x18\x06 \x01(\v2\x13.tfplugin6.DeferredR\bdeferred\x12J\n" +
-	"\x10planned_identity\x18\a \x01(\v2\x1f.tfplugin6.ResourceIdentityDataR\x0fplannedIdentity\"\xa2\x05\n" +
-	"\x13ApplyResourceChange\x1a\x82\x03\n" +
+	"\x10planned_identity\x18\a \x01(\v2\x1f.tfplugin6.ResourceIdentityDataR\x0fplannedIdentity\"\xcd\x05\n" +
+	"\x13ApplyResourceChange\x1a\xad\x03\n" +
 	"\aRequest\x12\x1b\n" +
 	"\ttype_name\x18\x01 \x01(\tR\btypeName\x128\n" +
 	"\vprior_state\x18\x02 \x01(\v2\x17.tfplugin6.DynamicValueR\n" +
@@ -7839,7 +7864,8 @@ const file_tfplugin6_proto_rawDesc = "" +
 	"\x06config\x18\x04 \x01(\v2\x17.tfplugin6.DynamicValueR\x06config\x12'\n" +
 	"\x0fplanned_private\x18\x05 \x01(\fR\x0eplannedPrivate\x12<\n" +
 	"\rprovider_meta\x18\x06 \x01(\v2\x17.tfplugin6.DynamicValueR\fproviderMeta\x12J\n" +
-	"\x10planned_identity\x18\a \x01(\v2\x1f.tfplugin6.ResourceIdentityDataR\x0fplannedIdentity\x1a\x85\x02\n" +
+	"\x10planned_identity\x18\a \x01(\v2\x1f.tfplugin6.ResourceIdentityDataR\x0fplannedIdentity\x12)\n" +
+	"\x10resource_address\x18\b \x01(\tR\x0fresourceAddress\x1a\x85\x02\n" +
 	"\bResponse\x124\n" +
 	"\tnew_state\x18\x01 \x01(\v2\x17.tfplugin6.DynamicValueR\bnewState\x12\x18\n" +
 	"\aprivate\x18\x02 \x01(\fR\aprivate\x127\n" +

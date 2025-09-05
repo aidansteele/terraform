@@ -601,6 +601,11 @@ message PlanResourceChange {
         DynamicValue provider_meta = 6;
         ClientCapabilities client_capabilities = 7;
         ResourceIdentityData prior_identity = 8;
+        // resource_address is the absolute resource address of the resource instance
+        // being planned, including any module path and index/key if applicable.
+        // Examples: "aws_iam_role_policy_attachment.rds_enhanced_monitoring",
+        // "module.postgres.aws_db_instance.primary", "module.app.module.web.aws_instance.server[0]"
+        string resource_address = 9;
     }
 
     message Response {
@@ -639,6 +644,11 @@ message ApplyResourceChange {
         bytes planned_private = 5;
         DynamicValue provider_meta = 6;
         ResourceIdentityData planned_identity = 7;
+        // resource_address is the absolute resource address of the resource instance
+        // being applied, including any module path and index/key if applicable.
+        // Examples: "aws_iam_role_policy_attachment.rds_enhanced_monitoring",
+        // "module.postgres.aws_db_instance.primary", "module.app.module.web.aws_instance.server[0]"
+        string resource_address = 8;
     }
     message Response {
         DynamicValue new_state = 1;

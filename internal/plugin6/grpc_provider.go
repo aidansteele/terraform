@@ -676,6 +676,7 @@ func (p *GRPCProvider) PlanResourceChange(r providers.PlanResourceChangeRequest)
 		ProposedNewState:   &proto6.DynamicValue{Msgpack: propMP},
 		PriorPrivate:       r.PriorPrivate,
 		ClientCapabilities: clientCapabilitiesToProto(r.ClientCapabilities),
+		ResourceAddress:    r.ResourceAddress,
 	}
 
 	if metaSchema.Body != nil {
@@ -781,11 +782,12 @@ func (p *GRPCProvider) ApplyResourceChange(r providers.ApplyResourceChangeReques
 	}
 
 	protoReq := &proto6.ApplyResourceChange_Request{
-		TypeName:       r.TypeName,
-		PriorState:     &proto6.DynamicValue{Msgpack: priorMP},
-		PlannedState:   &proto6.DynamicValue{Msgpack: plannedMP},
-		Config:         &proto6.DynamicValue{Msgpack: configMP},
-		PlannedPrivate: r.PlannedPrivate,
+		TypeName:        r.TypeName,
+		PriorState:      &proto6.DynamicValue{Msgpack: priorMP},
+		PlannedState:    &proto6.DynamicValue{Msgpack: plannedMP},
+		Config:          &proto6.DynamicValue{Msgpack: configMP},
+		PlannedPrivate:  r.PlannedPrivate,
+		ResourceAddress: r.ResourceAddress,
 	}
 
 	if metaSchema.Body != nil {

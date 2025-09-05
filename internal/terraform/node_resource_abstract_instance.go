@@ -465,6 +465,7 @@ func (n *NodeAbstractResourceInstance) planDestroy(ctx EvalContext, currentState
 			ProviderMeta:       metaConfigVal,
 			ClientCapabilities: ctx.ClientCapabilities(),
 			PriorIdentity:      currentState.Identity,
+			ResourceAddress:    n.Addr.String(),
 		})
 		deferred = resp.Deferred
 
@@ -994,6 +995,7 @@ func (n *NodeAbstractResourceInstance) plan(
 			ProviderMeta:       metaConfigVal,
 			ClientCapabilities: ctx.ClientCapabilities(),
 			PriorIdentity:      priorIdentity,
+			ResourceAddress:    n.Addr.String(),
 		})
 		// If we don't support deferrals, but the provider reports a deferral and does not
 		// emit any error level diagnostics, we should emit an error.
@@ -1196,6 +1198,7 @@ func (n *NodeAbstractResourceInstance) plan(
 				ProviderMeta:       metaConfigVal,
 				ClientCapabilities: ctx.ClientCapabilities(),
 				PriorIdentity:      plannedIdentity,
+				ResourceAddress:    n.Addr.String(),
 			})
 
 			// If we don't support deferrals, but the provider reports a deferral and does not
@@ -2660,6 +2663,7 @@ func (n *NodeAbstractResourceInstance) apply(
 			PlannedPrivate:  change.Private,
 			ProviderMeta:    metaConfigVal,
 			PlannedIdentity: change.AfterIdentity,
+			ResourceAddress: n.Addr.String(),
 		})
 
 		if !resp.NewIdentity.IsNull() {
