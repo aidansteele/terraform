@@ -233,6 +233,9 @@ func (n *nodePlannablePartialExpandedResource) managedResourceExecute(ctx EvalCo
 		// necessary data for that wired through here right now, but
 		// we might need to do that before stabilizing support for unknown
 		// resource instance expansion.
+		// ResourceAddress is left empty for partial expanded resources since
+		// we don't have a specific instance address.
+		ResourceAddress: "",
 	})
 	diags = diags.Append(resp.Diagnostics.InConfigBody(n.config.Config, n.addr.String()))
 	if diags.HasErrors() {

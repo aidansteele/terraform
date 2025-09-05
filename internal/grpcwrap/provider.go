@@ -383,6 +383,7 @@ func (p *provider) PlanResourceChange(_ context.Context, req *tfplugin5.PlanReso
 		PriorPrivate:     req.PriorPrivate,
 		ProviderMeta:     metaVal,
 		PriorIdentity:    priorIdentity,
+		ResourceAddress:  req.ResourceAddress,
 	})
 	resp.Diagnostics = convert.AppendProtoDiag(resp.Diagnostics, planResp.Diagnostics)
 	if planResp.Diagnostics.HasErrors() {
@@ -472,6 +473,7 @@ func (p *provider) ApplyResourceChange(_ context.Context, req *tfplugin5.ApplyRe
 		PlannedPrivate:  req.PlannedPrivate,
 		ProviderMeta:    metaVal,
 		PlannedIdentity: plannedIdentity,
+		ResourceAddress: req.ResourceAddress,
 	})
 
 	resp.Diagnostics = convert.AppendProtoDiag(resp.Diagnostics, applyResp.Diagnostics)
