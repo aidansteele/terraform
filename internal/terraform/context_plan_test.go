@@ -1749,6 +1749,7 @@ func TestContext2Plan_blockNestingGroup(t *testing.T) {
 			DeferralAllowed:            false,
 			WriteOnlyAttributesAllowed: true,
 		},
+		ResourceAddress: "test.foo",
 	}
 	if !cmp.Equal(got, want, valueTrans) {
 		t.Errorf("wrong PlanResourceChange request\n%s", cmp.Diff(got, want, valueTrans))
